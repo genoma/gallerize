@@ -1,0 +1,2 @@
+$ ->
+  $(".gallerize").gallerize()

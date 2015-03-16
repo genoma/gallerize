@@ -1,0 +1,13 @@
+.gallerize {
+  width: 100%;
+}
+
+.float-gallerize {
+  display: block;
+  float: left;
+  box-sizing: border-box;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  border: 1px solid black;
+}
