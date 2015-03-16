@@ -6,7 +6,8 @@
     blocksPerRow: 5,
     mobileBlocksPerRow: 3,
     mobileBreackPoint: 700,
-    height: "100px"
+    margin: 0.5,
+    height: "150px"
   };
   Plugin = function(element, options) {
     this.element = element;
@@ -17,17 +18,14 @@
   };
   $.extend(Plugin.prototype, {
     init: function() {
-      var $images, $this, allImages, i, images, len, theBlockWidth;
+      var $images, $this, allImages, theBlockWidth, theBlockWidthWithMargins;
       $this = $(this.element);
       $images = $("img", $this);
       allImages = $images.get();
-      theBlockWidth = 100 / this.breackPoint($this);
-      this.dinamicBreakpoint($this, this, allImages);
+      theBlockWidth = (100 / this.breackPoint($this)) - this.settings.margin;
+      theBlockWidthWithMargins = this.dinamicBreakpoint($this, this, allImages);
       $images.css("display", "none");
-      for (i = 0, len = allImages.length; i < len; i++) {
-        images = allImages[i];
-        this.giveBackground(images, theBlockWidth, this.settings.height, $this);
-      }
+      this.breackPointFunction(allImages, theBlockWidth, this.settings.height, this.settings.margin, $this, this);
     },
     getWidth: function(div) {
       return $(div).width();
@@ -41,21 +39,25 @@
         return this.settings.mobileBlocksPerRow;
       }
     },
-    dinamicBreakpoint: function(div, th, img) {
+    breackPointFunction: function(allImages, theBlockWidth, height, margin, div, obj) {
+      var i, images, len;
+      for (i = 0, len = allImages.length; i < len; i++) {
+        images = allImages[i];
+        obj.giveBackground(images, theBlockWidth, height, margin, div);
+      }
+    },
+    dinamicBreakpoint: function(div, obj, allImages) {
       return $(window).on("resize", function() {
-        var i, images, len, theBlockWidth;
+        var theBlockWidth;
         $(div).html("");
-        theBlockWidth = 100 / th.breackPoint(div);
-        for (i = 0, len = img.length; i < len; i++) {
-          images = img[i];
-          th.giveBackground(images, theBlockWidth, th.settings.height, div);
-        }
+        theBlockWidth = (100 / obj.breackPoint(div)) - obj.settings.margin;
+        obj.breackPointFunction(allImages, theBlockWidth, obj.settings.height, obj.settings.margin, div, obj);
       });
     },
-    giveBackground: function(src, width, height, div) {
+    giveBackground: function(src, width, height, margin, div) {
       var source;
       source = $(src).attr("src");
-      return $(div).append('<div class="float-gallerize" style="background: url(' + source + '); height:' + height + '; width:' + width + '%"></div>');
+      return $(div).append('<div class="float-gallerize" style="background: url(' + source + '); height:' + height + '; width:' + width + '%; margin: ' + margin / 2 + '%;"></div>');
     }
   });
   $.fn[pluginName] = function(options) {

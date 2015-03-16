@@ -8,7 +8,8 @@
     blocksPerRow: 5
     mobileBlocksPerRow: 3
     mobileBreackPoint: 700
-    height: "100px"
+    margin: 0.5
+    height: "150px"
 
   # The actual plugin constructor
   Plugin = (element, options) ->
@@ -27,14 +28,19 @@
 
       allImages = $images.get()
 
-      theBlockWidth = 100 / this.breackPoint($this)
+      theBlockWidth = (100 / this.breackPoint($this)) - this.settings.margin
+
+      theBlockWidthWithMargins =
 
       this.dinamicBreakpoint($this, this, allImages)
 
       $images.css "display", "none"
 
-      this.giveBackground(images, theBlockWidth, this.settings.height, $this) for images in allImages
-
+      this.breackPointFunction allImages,
+                               theBlockWidth,
+                               this.settings.height,
+                               this.settings.margin,
+                               $this, this
 
       return
 
@@ -48,18 +54,28 @@
       else
         return this.settings.mobileBlocksPerRow
 
-    dinamicBreakpoint: (div, th, img) ->
+    breackPointFunction: (allImages, theBlockWidth, height, margin, div, obj) ->
+      obj.giveBackground(images, theBlockWidth, height, margin, div) for images in allImages
+      return
+
+
+    dinamicBreakpoint: (div, obj, allImages) ->
       $(window).on "resize", ->
         $(div).html("")
-        theBlockWidth = 100 / th.breackPoint(div)
-        th.giveBackground(images, theBlockWidth, th.settings.height, div) for images in img
+        theBlockWidth = (100 / obj.breackPoint(div)) - obj.settings.margin
+        obj.breackPointFunction allImages,
+                                 theBlockWidth,
+                                 obj.settings.height,
+                                 obj.settings.margin,
+                                 div, obj
         return
 
-    giveBackground: (src, width, height, div) ->
+    giveBackground: (src, width, height, margin, div) ->
       source = $(src).attr("src")
       $(div).append('<div class="float-gallerize"
         style="background: url(' + source + ');
-        height:' + height + '; width:' + width + '%"></div>')
+        height:' + height + '; width:' + width + '%;
+        margin: ' + margin / 2 + '%;"></div>')
 
 
 

@@ -2,12 +2,19 @@
   width: 100%;
 }
 
+.gallerize:after {
+  position: relative;
+  display: block;
+  clear: both;
+  content: '';
+}
+
 .float-gallerize {
   display: block;
   float: left;
   box-sizing: border-box;
-  background-size: cover;
+  border-radius: 6px;
   background-repeat: no-repeat;
   background-position: center center;
-  border: 1px solid black;
+  background-size: cover;
 }
